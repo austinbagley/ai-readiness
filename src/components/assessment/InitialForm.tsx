@@ -41,11 +41,13 @@ const InitialForm: React.FC<InitialFormProps> = ({ onSubmit }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg bg-white">
+      <Card className="w-full max-w-4xl bg-white"> {/* Updated to max-w-4xl to match Results */}
         <CardContent className="p-6">
-          <div className="space-y-6">
+          <div className="space-y-8"> {/* Updated to space-y-8 to match Results */}
             <div className="text-center space-y-2">
-              <h1 className="text-2xl font-bold text-slate-900">AI Readiness Assessment</h1>
+              <h1 className="text-3xl font-bold text-slate-900"> {/* Updated to text-3xl to match Results */}
+                AI Readiness Assessment
+              </h1>
               <p className="text-slate-600">
                 Evaluate your organizations AI maturity and get personalized recommendations
               </p>

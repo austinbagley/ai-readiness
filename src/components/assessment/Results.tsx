@@ -78,7 +78,9 @@ const Results: React.FC<ResultsProps> = ({ userData, answers, onReset }) => {
         <CardContent className="p-6">
           <div className="space-y-8">
             <div className="text-center space-y-2">
-              <h1 className="text-3xl font-bold text-slate-900">Your AI Readiness Results</h1>
+              <h1 className="text-3xl font-bold text-slate-900">
+                Your AI Readiness Results
+              </h1>
               <p className="text-xl text-slate-600">
                 Overall Score: {overallScore.toFixed(1)} / 5
               </p>
