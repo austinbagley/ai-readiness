@@ -3,16 +3,11 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Answer } from '@/types/assessment';
 import { questions } from '@/data/questions';
 
-// Define props interface
 export interface SurveyQuestionProps {
   currentQuestionIndex: number;
   answers: Answer[];
@@ -21,45 +16,22 @@ export interface SurveyQuestionProps {
 
 const SurveyQuestion: React.FC<SurveyQuestionProps> = ({
   currentQuestionIndex,
-  answers,
   onAnswerSubmit,
 }) => {
-  const [showComparison, setShowComparison] = React.useState(false);
   const question = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex) / questions.length) * 100;
 
-  const handleAnswer = (value: string) => {
+  const handleOptionSelect = (value: number) => {
     const answer: Answer = {
       questionId: question.id,
-      value: Number(value),
+      value: value,
       component: question.component
     };
-    
-    setShowComparison(true);
     onAnswerSubmit(answer);
   };
 
-  const handleNext = () => {
-    setShowComparison(false);
-  };
-
-  // Get comparison data for the current question
-  const comparisonData = React.useMemo(() => {
-    const currentAnswer = answers.find(a => a.questionId === question.id);
-    return [
-      {
-        name: 'Your Score',
-        score: currentAnswer?.value || 0
-      },
-      {
-        name: 'Industry Average',
-        score: 3.5 // This would come from your industry averages
-      }
-    ];
-  }, [answers, question.id]);
-
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl bg-white">
         <CardContent className="p-6">
           <div className="space-y-8">
@@ -75,58 +47,37 @@ const SurveyQuestion: React.FC<SurveyQuestionProps> = ({
               <Progress value={progress} className="h-2" />
             </div>
 
-
-            <div className="space-y-4">
+            <div className="space-y-6">
               <h2 className="text-xl font-semibold text-slate-900">{question.text}</h2>
 
-              <RadioGroup
-                onValueChange={handleAnswer}
-                className="space-y-3"
-              >
+              <div className="space-y-3">
                 {question.options.map((option) => (
-                  <div key={option.value} className="flex items-center space-x-3">
-                    <RadioGroupItem 
-                      value={option.value.toString()} 
-                      id={`option-${option.value}`} 
-                    />
-                    <Label htmlFor={`option-${option.value}`} className="text-slate-700">
-                      {option.label}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-
-              <AnimatePresence>
-                {showComparison && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="mt-6 space-y-4"
+                    key={option.value}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <h3 className="text-lg font-semibold text-slate-900">How you compare</h3>
-                    <div className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={comparisonData}>
-                          <XAxis dataKey="name" />
-                          <YAxis domain={[0, 5]} />
-                          <Tooltip />
-                          <Bar dataKey="score" fill="#4f46e5" />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    {currentQuestionIndex < questions.length - 1 && (
-                      <Button
-                        onClick={handleNext}
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-                      >
-                        Next Question
-                      </Button>
-                    )}
+                    <button
+                      onClick={() => handleOptionSelect(option.value)}
+                      className="w-full p-4 text-left rounded-lg border border-slate-200 
+                        hover:border-indigo-600 hover:bg-indigo-50 transition-all duration-200
+                        group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full border-2 border-slate-300 
+                          group-hover:border-indigo-600 group-hover:bg-indigo-100 
+                          flex items-center justify-center text-sm font-medium text-slate-600 
+                          group-hover:text-indigo-700">
+                          {option.value}
+                        </div>
+                        <span className="text-slate-700 group-hover:text-slate-900">
+                          {option.label}
+                        </span>
+                      </div>
+                    </button>
                   </motion.div>
-                )}
-              </AnimatePresence>
+                ))}
+              </div>
             </div>
           </div>
         </CardContent>
